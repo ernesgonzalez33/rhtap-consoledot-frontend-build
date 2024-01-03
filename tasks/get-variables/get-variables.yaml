@@ -1,0 +1,46 @@
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: get-variables
+spec:
+  description: >-
+    Tekton task to get the env variables of a workspace using build_deploy.sh
+  workspaces:
+    - name: source
+  params:
+    - default: "source"
+      description: directory in the `output` workspace to clone the repo into.
+      name: subdirectory
+      type: string
+    - name: path-context
+      default: tests/insights-dashboard-master
+      description: path context directory inside the repo
+      type: string
+  results:
+    - name: COMPONENT
+      type: string
+      description: variable for the component's name
+    # - name: IMAGE
+    #   type: string
+    #   description: variable for the image
+    # - name: APP_ROOT
+    #   type: string
+    #   description: variable holding the app's root directory
+    # - name: WORKSPACE
+    #   type: string
+    #   description: variable holding the app's worspace's root directory
+    # - name: NODE_BUILD_VERSION
+    #   type: string
+    #   description: variable holding the app's Node build version
+    # - name: ROUTE_PATH
+    #   type: string
+    #   description: variable holding the the path for routing
+
+  steps:
+    - name: get-variables
+      image: registry.access.redhat.com/ubi9/ubi-minimal:9.3-1361.1699548032
+      script: |
+        #!/usr/bin/env sh
+        echo "$COMPONENT" | tee "$(results.COMPONENT.path)"
+        export

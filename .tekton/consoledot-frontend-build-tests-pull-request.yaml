@@ -209,6 +209,9 @@ spec:
       - name: source
         workspace: workspace
     - name: inject-dockerfile
+      params:
+        - name: path-context
+          value: $(params.path-context)
       taskRef:
         resolver: git
         params:
@@ -220,6 +223,25 @@ spec:
             value: tasks/inject-dockerfile/inject-dockerfile.yaml
       workspaces:
       - name: dockerfilews
+        workspace: workspace
+      runAfter:
+      - clone-repository
+      - get-variables
+    - name: get-variables
+      params:
+        - name: path-context
+          value: $(params.path-context)
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: '{{source_url}}'
+          - name: revision
+            value: '{{source_branch}}'
+          - name: pathInRepo
+            value: tasks/get-variables/get-variables.yaml
+      workspaces:
+      - name: source
         workspace: workspace
       runAfter:
       - clone-repository
