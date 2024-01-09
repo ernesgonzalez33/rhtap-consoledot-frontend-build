@@ -219,6 +219,22 @@ spec:
         workspace: workspace
       runAfter:
       - clone-repository
+      - get-variables
+    - name: get-variables
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: '{{source_url}}'
+          - name: revision
+            value: '{{source_branch}}'
+          - name: pathInRepo
+            value: tasks/get-variables/get-variables.yaml
+      workspaces:
+      - name: source
+        workspace: workspace
+      runAfter:
+      - clone-repository
     - name: build-container
       params:
       - name: IMAGE
